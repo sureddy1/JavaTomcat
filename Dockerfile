@@ -15,6 +15,8 @@ ENV LD_LIBRARY_PATH /mesa/openswr/.local/lib:$CATALINA_HOME:$LD_LIBRARY_PATH
 
 ENV JAVA_OPTS "$JAVA_OPTS -Djava.library.path=/usr/lib:/usr/local/apr/lib:/usr/local/apache-tomcat/9.0.21/bin:/usr/local/apache-tomcat/9.0.21/lib"
 
+RUN apt-get -y install curl vim nano procps net-tools openssh-server tcptraceroute nscd tcpdump sudo
+
 RUN groupadd -r tomcat && useradd -m -g tomcat tomcat;\
     mkdir /usr/local/apache-tomcat-9.0.21;\
     chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21;\
@@ -31,7 +33,6 @@ RUN apt-get -y install libapr1-dev libssl-dev gcc make --no-install-recommends;\
   chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21/;\
   apt-get -y remove libssl-dev libapr1-dev gcc make
 
-RUN apt-get -y install curl vim nano procps net-tools openssh-server tcptraceroute nscd tcpdump sudo
 
 COPY sshd_config /etc/ssh/
 COPY watchdog.sh /usr/local/apache-tomcat-9.0.21/bin/
