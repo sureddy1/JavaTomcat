@@ -18,19 +18,18 @@ ENV JAVA_OPTS "$JAVA_OPTS -Djava.library.path=/usr/lib:/usr/local/apr/lib:/usr/l
 RUN apt-get -y install curl vim nano procps net-tools openssh-server tcptraceroute nscd tcpdump sudo
 
 RUN groupadd -r tomcat && useradd -m -g tomcat tomcat;\
-    mkdir /usr/local/apache-tomcat-9.0.21;\
-    chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21;\
     echo "tomcat   ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers;
 
-ADD apache-tomcat-9.0.21.tar.gz /usr/local/
+COPY apache-tomcat-9.0.21.tar.gz /usr/local/
+
+RUN chown -R tomcat:tomcat apache-tomcat-9.0.21.tar.gz && cd /usr/local;\
+    tar xvf apache-tomcat-9.0.21.tar.gz && chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21;
 
 RUN apt-get -y install libapr1-dev libssl-dev gcc make --no-install-recommends;\
-  chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21/;\
   cd /usr/local/apache-tomcat-9.0.21/bin/ && tar xvf tomcat-native.tar.gz;\
-  cd tomcat-native-1.2.21-src/native;\
+  cd tomcat-native-1.2.21-src/native && chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21;\
   ./configure && make && make install;\
   cd ../ rm -rf tomcat-native-1.2.21;\
-  chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21/;\
   apt-get -y remove libssl-dev libapr1-dev gcc make
 
 
@@ -39,10 +38,8 @@ COPY watchdog.sh /usr/local/apache-tomcat-9.0.21/bin/
 RUN cd $CATALINA_HOME;\
     echo "root:Docker!" | chpasswd;\    
     chown -R tomcat:tomcat .;\
-    chmod +x bin/watchdog.sh;\
-    chmod -R g+r conf;\
-    chmod -R g+w logs temp webapps work;\
-    chmod -R g+s conf logs temp webapps work; 
+    chmod +x bin/watchdog.sh;
+    
 
 WORKDIR $CATALINA_HOME
 USER tomcat
