@@ -22,7 +22,7 @@ RUN groupadd -r tomcat && useradd -m -g tomcat tomcat;\
 
 COPY apache-tomcat-9.0.21.tar.gz /usr/local/
 
-RUN chown -R tomcat:tomcat apache-tomcat-9.0.21.tar.gz && cd /usr/local;\
+RUN cd /usr/local && chown -R tomcat:tomcat apache-tomcat-9.0.21.tar.gz;\
     tar xvf apache-tomcat-9.0.21.tar.gz && chown -R tomcat:tomcat /usr/local/apache-tomcat-9.0.21;
 
 RUN apt-get -y install libapr1-dev libssl-dev gcc make --no-install-recommends;\
