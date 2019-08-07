@@ -17,7 +17,7 @@ ENV JAVA_OPTS "$JAVA_OPTS -Djava.library.path=/usr/lib:/usr/local/apr/lib:/usr/l
 
 RUN groupadd -r tomcat && useradd -m -g tomcat tomcat;\
     chown -R tomcat:tomcat /usr/local/;\
-    echo "tomcat   ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers
+    echo "tomcat   ALL=(ALL:ALL) NOPASSWD: ALL" >> /etc/sudoers;
 
 ADD apache-tomcat-9.0.21.tar.gz /usr/local/
 
